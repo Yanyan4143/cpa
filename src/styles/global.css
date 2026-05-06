@@ -288,10 +288,12 @@ canvas {
 }
 
 .hero-stats {
-    display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);  /* 3 equal columns */
+    gap: 1.5rem;
+    max-width: 600px;          /* adjust width as needed */
+    margin: 0 auto 2rem;       /* centers the whole grid block */
+    justify-items: center;     /* centers items inside each cell */
 }
 
 .stat-item {
