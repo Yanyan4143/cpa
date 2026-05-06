@@ -287,14 +287,6 @@ canvas {
     border-radius: 0.75rem;
 }
 
-.hero-stats {
-    display: grid;
-    grid-template-columns: 1fr;        /* single column = vertical stacking */
-    gap: 1.5rem;                       /* space between rows */
-    margin: 0 auto 2rem;               /* center the whole grid */
-    max-width: 250px;                  /* keep it compact, adjust as needed */
-}
-
 .stat-item {
     text-align: center;
     background: rgba(3, 7, 18, 0.7);
@@ -950,8 +942,17 @@ canvas {
     background: rgba(239, 68, 68, 0.1);
     color: #ef4444;
 }
+/* Desktop – 3 columns, centered */
+.hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin: 0 auto 2rem;      /* centers the whole block */
+    max-width: 500px;          /* controls overall width */
+}
 
 /* ========== ANIMATIONS ========== */
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -979,14 +980,23 @@ canvas {
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
 
 /* ========== RESPONSIVE DESIGN ========== */
+/* Tablet – keep 3 columns, slightly narrower */
+@media (max-width: 768px) {
+    .hero-stats {
+        max-width: 400px;
+    }
+}
+
+/* Mobile – stack in 3 rows, single column */
+@media (max-width: 480px) {
+    .hero-stats {
+        grid-template-columns: 1fr;
+        max-width: 220px;      /* compact, centered stack */
+    }
+}
 @media (max-width: 1024px) {
     .skills-grid { grid-template-columns: repeat(2, 1fr); }
     .projects-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 480px) {
-    .hero-stats {
-        max-width: 180px;
-    }
 }
 @media (max-width: 768px) {
     .hero-title { font-size: 2.5rem; }
