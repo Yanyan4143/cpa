@@ -944,26 +944,30 @@ canvas {
 }
 .hero-stats {
     display: grid;
-    /* Forces exactly 3 equal columns */
+    /* Forces exactly 3 equal-width columns */
     grid-template-columns: repeat(3, 1fr); 
-    gap: 1.5rem;
+    gap: 1.25rem;
     
-    /* Centers the entire grid on the page */
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 2rem;
+    /* Center the block on the page */
+    margin: 0 auto 2rem;
     
-    /* Increases width so 3 cards can actually fit horizontally */
-    max-width: 800px; 
+    /* Increase this to give the 150+ card enough space to stay in line */
+    max-width: 850px; 
     width: 100%;
     
-    text-align: center; 
-    align-items: stretch; /* Ensures all cards have the same height */
+    /* 'stretch' makes all cards in the row the same height automatically */
+    align-items: stretch;
+    text-align: center;
 }
 
-/* Ensure the cards inside don't have forced widths that break the layout */
-.hero-stats > div {
-    min-width: 0;
+/* Ensure the cards themselves handle content gracefully */
+.hero-stats .stat-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers text vertically within the equal-height box */
+    height: 100%; 
+    min-width: 0; /* Prevents text from pushing the card wider than its grid cell */
+    padding: 1.25rem 0.75rem;
 }
 /* ========== ANIMATIONS ========== */
 
@@ -994,21 +998,22 @@ canvas {
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
 
 /* ========== RESPONSIVE DESIGN ========== */
-/* Tablet – Allow the row to stay horizontal but shrink the gap */
+/* Keep horizontal on tablets and large phones */
 @media (max-width: 768px) {
     .hero-stats {
-        max-width: 700px;
-        gap: 1rem;
-        padding: 0 1rem;
+        max-width: 650px;
+        gap: 0.75rem;
+    }
+    .stat-value {
+        font-size: 1.25rem; /* Slightly smaller text to help fit on tablets */
     }
 }
 
-/* Mobile – Stack in a single column only on very small screens */
-@media (max-width: 580px) {
+/* Only stack on small mobile devices where 3 columns would be unreadable */
+@media (max-width: 500px) {
     .hero-stats {
         grid-template-columns: 1fr;
-        max-width: 300px; /* Centered narrow stack for mobile */
-        gap: 1.25rem;
+        max-width: 280px;
     }
 }
 @media (max-width: 1024px) {
