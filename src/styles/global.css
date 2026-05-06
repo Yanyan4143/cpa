@@ -944,23 +944,27 @@ canvas {
 }
 .hero-stats {
     display: grid;
-    /* repeat(3, 1fr) creates 3 equal columns */
+    /* Forces exactly 3 equal columns */
     grid-template-columns: repeat(3, 1fr); 
     gap: 1.5rem;
     
-    /* Horizontal centering for the container itself */
+    /* Centers the entire grid on the page */
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 2rem;
     
-    /* Centering content inside the grid cells */
-    text-align: center; 
-    align-items: center; /* Vertical alignment if items have different heights */
+    /* Increases width so 3 cards can actually fit horizontally */
+    max-width: 800px; 
+    width: 100%;
     
-    max-width: 500px; 
-    width: 100%; /* Prevents overflow on very small screens */
+    text-align: center; 
+    align-items: stretch; /* Ensures all cards have the same height */
 }
 
+/* Ensure the cards inside don't have forced widths that break the layout */
+.hero-stats > div {
+    min-width: 0;
+}
 /* ========== ANIMATIONS ========== */
 
 @keyframes fadeIn {
@@ -990,18 +994,21 @@ canvas {
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
 
 /* ========== RESPONSIVE DESIGN ========== */
-/* Tablet – keep 3 columns, slightly narrower */
+/* Tablet – Allow the row to stay horizontal but shrink the gap */
 @media (max-width: 768px) {
     .hero-stats {
-        max-width: 400px;
+        max-width: 700px;
+        gap: 1rem;
+        padding: 0 1rem;
     }
 }
 
-/* Mobile – stack in 3 rows, single column */
-@media (max-width: 480px) {
+/* Mobile – Stack in a single column only on very small screens */
+@media (max-width: 580px) {
     .hero-stats {
         grid-template-columns: 1fr;
-        max-width: 220px;      /* compact, centered stack */
+        max-width: 300px; /* Centered narrow stack for mobile */
+        gap: 1.25rem;
     }
 }
 @media (max-width: 1024px) {
