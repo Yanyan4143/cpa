@@ -942,12 +942,13 @@ canvas {
     background: rgba(239, 68, 68, 0.1);
     color: #ef4444;
 }
+/* Desktop – 3 items in a horizontal row, centered */
 .hero-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
-    margin: 0 auto 2rem;
-    max-width: 500px;   /* adjust width as needed */
+    margin: 0 auto 2rem;        /* centers the whole block */
+    max-width: 500px;            /* adjust if you want wider/narrower */
 }
 
 /* ========== ANIMATIONS ========== */
