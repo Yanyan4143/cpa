@@ -1,200 +1,301 @@
 ---
-// src/layouts/Layout.astro
-import "../styles/global.css";
-import Header from "../components/Header.astro";
+// src/components/ThreeBackground.astro
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christian Paul Atillo | Technical-Creative Hybrid</title>
-    <meta name="description" content="BSIT Graduate | IoT Solutions | AI-Integrated Web Development | Graphic Design">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="/fingerprint.png">
-</head>
-<body>
-    <Header />
-    <main id="main-content">
-        <slot />
-    </main>
-    
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
-    <script src="https://files.bpcontent.cloud/2026/04/26/05/20260426052923-GZUQ3YBP.js" defer></script>
-    
-    <!-- MEDIUM VISIBILITY PARTICLE BACKGROUND -->
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
-        }
-    }
-    </script>
-    
-    <script type="module">
-    import * as THREE from 'three';
+<script>
+  import * as THREE from 'three';
 
-    function initParticleBackground() {
-        // Create scene
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x030712);
-        
-        // Create camera
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 22;
-        
-        // Create renderer
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x030712);
-        
-        // Style canvas to be behind content
-        const canvas = renderer.domElement;
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.zIndex = '0';
-        canvas.style.pointerEvents = 'none';
-        
-        document.body.insertBefore(canvas, document.body.firstChild);
-        
-        // 2000 PARTICLES - MEDIUM VISIBILITY
-        const particleCount = 2000;
-        const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
-        
-        // Store original positions
-        const originalPositions = new Float32Array(particleCount * 3);
-        
-        for (let i = 0; i < particleCount; i++) {
-            // Spread particles in a sphere
-            const radius = 12 + Math.random() * 20;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos(2 * Math.random() - 1);
-            
-            const x = radius * Math.sin(phi) * Math.cos(theta);
-            const y = radius * Math.sin(phi) * Math.sin(theta) * 0.6;
-            const z = radius * Math.cos(phi);
-            
-            positions[i * 3] = x;
-            positions[i * 3 + 1] = y;
-            positions[i * 3 + 2] = z;
-            
-            originalPositions[i * 3] = x;
-            originalPositions[i * 3 + 1] = y;
-            originalPositions[i * 3 + 2] = z;
-            
-            // MEDIUM VISIBILITY COLORS - Brighter but not overwhelming
-            const colorType = Math.random();
-            if (colorType < 0.5) {
-                // Bright Blue
-                colors[i * 3] = 0.4;
-                colors[i * 3 + 1] = 0.7;
-                colors[i * 3 + 2] = 1.0;
-            } else if (colorType < 0.75) {
-                // Bright Cyan
-                colors[i * 3] = 0.3;
-                colors[i * 3 + 1] = 0.8;
-                colors[i * 3 + 2] = 1.0;
-            } else {
-                // Bright Purple
-                colors[i * 3] = 0.7;
-                colors[i * 3 + 1] = 0.5;
-                colors[i * 3 + 2] = 1.0;
-            }
-        }
-        
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        
-        // MEDIUM VISIBILITY MATERIAL - Balanced opacity and size
-        const material = new THREE.PointsMaterial({
-            size: 0.13,
-            vertexColors: true,
-            transparent: true,
-            opacity: 0.65,
-            blending: THREE.AdditiveBlending
-        });
-        
-        const particles = new THREE.Points(geometry, material);
-        scene.add(particles);
-        
-        // Mouse position tracking
-        const mouse = { x: 0, y: 0 };
-        let time = 0;
-        
-        document.addEventListener('mousemove', (event) => {
-            // Normalize mouse coordinates (-1 to 1)
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = (event.clientY / window.innerHeight) * 2 - 1;
-        });
-        
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
-            time += 0.012;
-            
-            const positionsAttr = geometry.attributes.position.array;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const ix = i * 3;
-                const iy = i * 3 + 1;
-                const iz = i * 3 + 2;
-                
-                // Get original position
-                const origX = originalPositions[ix];
-                const origY = originalPositions[iy];
-                const origZ = originalPositions[iz];
-                
-                // Gentle floating movement
-                const floatX = Math.sin(time * 0.4 + origY * 0.25) * 0.4;
-                const floatY = Math.cos(time * 0.35 + origX * 0.25) * 0.4;
-                const floatZ = Math.sin(time * 0.45 + origX * 0.2) * 0.3;
-                
-                // Mouse influence - Medium strength
-                const influenceX = mouse.x * 1.8 * (1 - Math.abs(origZ) / 35);
-                const influenceY = mouse.y * 1.2 * (1 - Math.abs(origZ) / 35);
-                
-                // Combine movements
-                positionsAttr[ix] = origX + floatX + influenceX;
-                positionsAttr[iy] = origY + floatY + influenceY;
-                positionsAttr[iz] = origZ + floatZ;
-            }
-            
-            geometry.attributes.position.needsUpdate = true;
-            
-            // Subtle rotation based on mouse
-            particles.rotation.y = mouse.x * 0.15;
-            particles.rotation.x = mouse.y * 0.1;
-            
-            renderer.render(scene, camera);
-        }
-        
-        animate();
-        
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+  let scene, camera, renderer;
+  let particles, rotatingCube, torusKnot;
+  let floatingShapes = [];
+  let clock;
+
+  function init3DBackground() {
+    // Check if WebGL is available
+    if (!THREE.WebGLRenderer.isWebGLAvailable()) {
+      console.error('WebGL not available');
+      return;
+    }
+
+    // Create scene
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x030712);
+    scene.fog = new THREE.FogExp2(0x030712, 0.002);
+    
+    // Create camera
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 5, 25);
+    
+    // Create renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x030712);
+    renderer.shadowMap.enabled = true;
+    
+    // Style the canvas
+    const canvas = renderer.domElement;
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.zIndex = '-1';
+    canvas.style.pointerEvents = 'none';
+    
+    document.body.insertBefore(canvas, document.body.firstChild);
+    
+    clock = new THREE.Clock();
+    
+    // ============ 1. MAIN PARTICLE SYSTEM ============
+    const particleCount = 3000;
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+    const particleColors = new Float32Array(particleCount * 3);
+    
+    for (let i = 0; i < particleCount; i++) {
+      const radius = 40 + Math.random() * 30;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      
+      particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 0.5;
+      particlePositions[i * 3 + 2] = radius * Math.cos(phi);
+      
+      const colorChoice = Math.random();
+      if (colorChoice < 0.33) {
+        particleColors[i * 3] = 0.2;
+        particleColors[i * 3 + 1] = 0.5;
+        particleColors[i * 3 + 2] = 1.0;
+      } else if (colorChoice < 0.66) {
+        particleColors[i * 3] = 0.6;
+        particleColors[i * 3 + 1] = 0.2;
+        particleColors[i * 3 + 2] = 1.0;
+      } else {
+        particleColors[i * 3] = 0.1;
+        particleColors[i * 3 + 1] = 0.8;
+        particleColors[i * 3 + 2] = 0.5;
+      }
     }
     
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initParticleBackground);
-    } else {
-        initParticleBackground();
-    }
-    </script>
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    particlesGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
     
-    <script type="module" src="/scripts/main.js"></script>
-</body>
-</html>
+    const particleMaterial = new THREE.PointsMaterial({
+      size: 0.15,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.8,
+      blending: THREE.AdditiveBlending
+    });
+    
+    particles = new THREE.Points(particlesGeometry, particleMaterial);
+    scene.add(particles);
+    
+    // ============ 2. FLOATING DUST PARTICLES ============
+    const dustCount = 1500;
+    const dustGeometry = new THREE.BufferGeometry();
+    const dustPositions = new Float32Array(dustCount * 3);
+    
+    for (let i = 0; i < dustCount; i++) {
+      dustPositions[i * 3] = (Math.random() - 0.5) * 80;
+      dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+      dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 60;
+    }
+    
+    dustGeometry.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
+    const dustMaterial = new THREE.PointsMaterial({
+      color: 0x4f9eff,
+      size: 0.05,
+      transparent: true,
+      opacity: 0.4,
+      blending: THREE.AdditiveBlending
+    });
+    
+    const dust = new THREE.Points(dustGeometry, dustMaterial);
+    scene.add(dust);
+    
+    // ============ 3. ROTATING TORUS KNOT ============
+    const knotGeometry = new THREE.TorusKnotGeometry(2.5, 0.4, 200, 32, 3, 4);
+    const knotMaterial = new THREE.MeshStandardMaterial({
+      color: 0x3b82f6,
+      emissive: 0x1e40af,
+      emissiveIntensity: 0.5,
+      metalness: 0.8,
+      roughness: 0.2
+    });
+    torusKnot = new THREE.Mesh(knotGeometry, knotMaterial);
+    torusKnot.position.set(-5, -1, -5);
+    scene.add(torusKnot);
+    
+    // Wireframe version
+    const knotWireframeMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00ffff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.3
+    });
+    const torusKnotWire = new THREE.Mesh(knotGeometry, knotWireframeMaterial);
+    torusKnot.add(torusKnotWire);
+    
+    // ============ 4. ROTATING CUBE ============
+    const cubeGeometry = new THREE.BoxGeometry(3, 3, 3);
+    const cubeMaterial = new THREE.MeshStandardMaterial({
+      color: 0x8b5cf6,
+      emissive: 0x4c1d95,
+      emissiveIntensity: 0.3,
+      metalness: 0.9,
+      roughness: 0.1,
+      transparent: true,
+      opacity: 0.7
+    });
+    rotatingCube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+    rotatingCube.position.set(6, 2, -4);
+    scene.add(rotatingCube);
+    
+    const edgesGeometry = new THREE.EdgesGeometry(cubeGeometry);
+    const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x00ffff });
+    const wireframe = new THREE.LineSegments(edgesGeometry, edgesMaterial);
+    rotatingCube.add(wireframe);
+    
+    // ============ 5. FLOATING SPHERES ============
+    const sphereCount = 8;
+    for (let i = 0; i < sphereCount; i++) {
+      const sphereGeometry = new THREE.SphereGeometry(0.4, 32, 32);
+      const sphereMaterial = new THREE.MeshStandardMaterial({
+        color: 0x10b981,
+        emissive: 0x065f46,
+        emissiveIntensity: 0.4,
+        metalness: 0.6,
+        roughness: 0.3
+      });
+      const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+      sphere.userData = {
+        initialX: (Math.random() - 0.5) * 15,
+        initialY: (Math.random() - 0.5) * 10,
+        initialZ: (Math.random() - 0.5) * 15 - 5,
+        speedX: 0.5 + Math.random() * 1,
+        speedY: 0.3 + Math.random() * 0.8,
+        speedZ: 0.4 + Math.random() * 0.7
+      };
+      sphere.position.set(
+        sphere.userData.initialX,
+        sphere.userData.initialY,
+        sphere.userData.initialZ
+      );
+      scene.add(sphere);
+      floatingShapes.push(sphere);
+    }
+    
+    // ============ 6. NEON GRID ============
+    const gridHelper = new THREE.GridHelper(50, 40, 0x3b82f6, 0x1e3a8a);
+    gridHelper.position.y = -6;
+    gridHelper.material.transparent = true;
+    gridHelper.material.opacity = 0.3;
+    scene.add(gridHelper);
+    
+    // ============ 7. RINGS ============
+    const ringGeometry = new THREE.TorusGeometry(3, 0.08, 64, 200);
+    const ringMaterial = new THREE.MeshStandardMaterial({
+      color: 0x3b82f6,
+      emissive: 0x1e40af,
+      emissiveIntensity: 0.6
+    });
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+    ring.position.set(0, 2, -8);
+    ring.rotation.x = Math.PI / 2;
+    scene.add(ring);
+    
+    // ============ 8. LIGHTING ============
+    const ambientLight = new THREE.AmbientLight(0x404060);
+    scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 10, 7);
+    directionalLight.castShadow = true;
+    scene.add(directionalLight);
+    
+    const blueLight = new THREE.PointLight(0x3b82f6, 0.5);
+    blueLight.position.set(3, 2, 4);
+    scene.add(blueLight);
+    
+    const purpleLight = new THREE.PointLight(0x8b5cf6, 0.5);
+    purpleLight.position.set(-3, 1, 5);
+    scene.add(purpleLight);
+    
+    const movingLight = new THREE.PointLight(0xff00ff, 0.4);
+    scene.add(movingLight);
+    
+    // ============ ANIMATION LOOP ============
+    function animate() {
+      const elapsedTime = performance.now() * 0.001;
+      
+      // Rotate main particle system
+      particles.rotation.y = elapsedTime * 0.05;
+      particles.rotation.x = Math.sin(elapsedTime * 0.1) * 0.1;
+      
+      // Rotate dust
+      dust.rotation.y = elapsedTime * 0.03;
+      dust.rotation.x = elapsedTime * 0.02;
+      
+      // Animate torus knot
+      if (torusKnot) {
+        torusKnot.rotation.x = elapsedTime * 0.3;
+        torusKnot.rotation.y = elapsedTime * 0.5;
+      }
+      
+      // Animate cube
+      if (rotatingCube) {
+        rotatingCube.rotation.x = elapsedTime * 0.4;
+        rotatingCube.rotation.y = elapsedTime * 0.6;
+        rotatingCube.rotation.z = elapsedTime * 0.2;
+      }
+      
+      // Animate ring
+      ring.rotation.z = elapsedTime * 0.3;
+      
+      // Animate floating shapes
+      floatingShapes.forEach((shape) => {
+        if (shape.userData) {
+          shape.position.x = shape.userData.initialX + Math.sin(elapsedTime * shape.userData.speedX) * 1.5;
+          shape.position.y = shape.userData.initialY + Math.cos(elapsedTime * shape.userData.speedY) * 1.2;
+          shape.position.z = shape.userData.initialZ + Math.sin(elapsedTime * shape.userData.speedZ) * 1;
+          shape.rotation.x = elapsedTime * 0.5;
+          shape.rotation.y = elapsedTime * 0.3;
+        }
+      });
+      
+      // Animate moving light
+      movingLight.position.x = Math.sin(elapsedTime * 0.5) * 5;
+      movingLight.position.z = Math.cos(elapsedTime * 0.3) * 6;
+      movingLight.position.y = Math.sin(elapsedTime * 0.7) * 3;
+      
+      // Gentle camera movement
+      camera.position.x = Math.sin(elapsedTime * 0.1) * 1;
+      camera.position.y = Math.cos(elapsedTime * 0.15) * 0.5;
+      camera.lookAt(0, 0, 0);
+      
+      // Pulse lights
+      blueLight.intensity = 0.4 + Math.sin(elapsedTime * 1.5) * 0.2;
+      purpleLight.intensity = 0.4 + Math.cos(elapsedTime * 1.8) * 0.2;
+      
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  }
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init3DBackground);
+  } else {
+    init3DBackground();
+  }
+</script>
