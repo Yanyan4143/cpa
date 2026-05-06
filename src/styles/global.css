@@ -944,30 +944,26 @@ canvas {
 }
 .hero-stats {
     display: grid;
-    /* Forces exactly 3 equal-width columns */
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 1.25rem;
-    
-    /* Center the block on the page */
-    margin: 0 auto 2rem;
-    
-    /* Increase this to give the 150+ card enough space to stay in line */
-    max-width: 850px; 
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0; /* Remove gap if using borders for a "connected" look */
+    max-width: 850px;
+    margin: 2rem auto;
     width: 100%;
-    
-    /* 'stretch' makes all cards in the row the same height automatically */
-    align-items: stretch;
-    text-align: center;
+    align-items: stretch; /* Keeps all 3 cards at the exact same height */
 }
 
-/* Ensure the cards themselves handle content gracefully */
-.hero-stats .stat-item {
+.stat-item {
+    padding: 1.5rem;
+    text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centers text vertically within the equal-height box */
-    height: 100%; 
-    min-width: 0; /* Prevents text from pushing the card wider than its grid cell */
-    padding: 1.25rem 0.75rem;
+    justify-content: center;
+}
+
+/* Add the divider lines using borders on the middle item */
+.stat-item:nth-child(2) {
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 /* ========== ANIMATIONS ========== */
 
