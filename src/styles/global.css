@@ -942,13 +942,23 @@ canvas {
     background: rgba(239, 68, 68, 0.1);
     color: #ef4444;
 }
-/* Desktop – 3 items in a horizontal row, centered */
 .hero-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* repeat(3, 1fr) creates 3 equal columns */
+    grid-template-columns: repeat(3, 1fr); 
     gap: 1.5rem;
-    margin: 0 auto 2rem;        /* centers the whole block */
-    max-width: 500px;            /* adjust if you want wider/narrower */
+    
+    /* Horizontal centering for the container itself */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+    
+    /* Centering content inside the grid cells */
+    text-align: center; 
+    align-items: center; /* Vertical alignment if items have different heights */
+    
+    max-width: 500px; 
+    width: 100%; /* Prevents overflow on very small screens */
 }
 
 /* ========== ANIMATIONS ========== */
